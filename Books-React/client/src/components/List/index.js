@@ -28,7 +28,8 @@ export function BookItem({
   title,
   author,
   description,
-  link
+  link,
+  onClick
 }) {
   return (
     <li className="list-group-item">
@@ -43,7 +44,9 @@ export function BookItem({
             <p>{description}</p>
             <a rel="noreferrer noopener" target="_blank" href={link}>
               Go to book on Google Books!
-            </a>
+            </a> 
+            <br></br>
+            <button type="button" onClick={onClick} class="btn btn-primary">Save Book</button>
           </Col>
         </Row>
       </Container>

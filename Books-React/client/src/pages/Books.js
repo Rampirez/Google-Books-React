@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import DeleteBtn from "../components/DeleteBtn";
+import SaveBtn from "../components/SaveBtn"
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
@@ -35,6 +36,12 @@ class Books extends Component {
     API.deleteBook(id)
       .then(res => this.loadBooks())
       .catch(err => console.log(err));
+  };
+
+  saveBook = bookData => {
+    API.saveBook(bookData)
+    .then(res => this.loadBooks())
+    .catch(err => console.log(err));
   };
 
   handleInputChange = event => {
@@ -88,7 +95,8 @@ class Books extends Component {
                         image={book.volumeInfo.imageLinks === undefined
                           ? ""
                           : `${book.volumeInfo.imageLinks.thumbnail}`}
-                      />
+                        onClick={this.saveBook(book.volumeInfo)}
+                      ><SaveBtn/></BookItem>
                     );
                   })}
                 </BookList>

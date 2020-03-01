@@ -17,7 +17,7 @@ module.exports = {
   },
   create: function(req, res) {
     db.Book
-      .create(req.body)
+      .create({title: req.body.volumeInfo.title, author: req.body.volumeInfo.author, description: req.body.volumeInfo.description})
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
