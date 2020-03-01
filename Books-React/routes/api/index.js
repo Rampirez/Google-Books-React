@@ -7,7 +7,7 @@ router.use("/books", bookRoutes);
 
 router.get("/googlebooks/:book", (req, res) => {
     axios
-      .get("https://www.googleapis.com/books/v1/volumes?q=harry")
+      .get("https://www.googleapis.com/books/v1/volumes?q=" + req.params.book)
       .then(results => {
           console.log("yeet");
           console.log(results.data);

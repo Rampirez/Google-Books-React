@@ -49,7 +49,7 @@ class Books extends Component {
     // When the form is submitted, prevent its default behavior, get recipes update the recipes state
     event.preventDefault();
     API.getGoogleBooks(this.state.booksSearch)
-      .then(res => console.log(res.data))
+      .then(res => this.setState({ googleBooks: res.data.items }))
       .catch(err => console.log(err));
   };
 
@@ -80,12 +80,14 @@ class Books extends Component {
                   {this.state.googleBooks.map(book => {
                     return (
                       <BookItem
-                        key={book.title}
-                        title={book.title}
-                        author={book.author}
-                        link={book.link}
-                        description={book.description}
-                        image={book.image}
+                        key={book.volumeInfo.title}
+                        title={book.volumeInfo.title}
+                        author={book.volumeInfo.authors}
+                        link={book.volumeInfo.infoLink}
+                        description={book.volumeInfo.description}
+                        image={book.volumeInfo.imageLinks === undefined
+                          ? ""
+                          : `${book.volumeInfo.imageLinks.thumbnail}`}
                       />
                     );
                   })}
