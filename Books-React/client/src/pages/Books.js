@@ -4,15 +4,19 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { List, ListItem, BookItem, BookList } from "../components/List";
+import { Input, TextArea, FormBtn, Button} from "../components/Form";
 
 class Books extends Component {
   state = {
     books: [],
+    googleBooks: [],
+    booksSearch: "",
     title: "",
     author: "",
-    synopsis: ""
+    description: "",
+    image:"",
+    link:""
   };
 
   componentDidMount() {
@@ -22,7 +26,7 @@ class Books extends Component {
   loadBooks = () => {
     API.getBooks()
       .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+        this.setState({ books: res.data, title: "", author: "", description: "", image: "", link: ""})
       )
       .catch(err => console.log(err));
   };
@@ -35,22 +39,18 @@ class Books extends Component {
 
   handleInputChange = event => {
     const { name, value } = event.target;
+    console.log(value);
     this.setState({
-      [name]: value
+      booksSearch: value
     });
   };
 
   handleFormSubmit = event => {
+    // When the form is submitted, prevent its default behavior, get recipes update the recipes state
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
+    API.getGoogleBooks(this.state.booksSearch)
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err));
   };
 
   render() {
@@ -63,30 +63,33 @@ class Books extends Component {
             </Jumbotron>
             <form>
               <Input
-                value={this.state.title}
                 onChange={this.handleInputChange}
-                name="title"
-                placeholder="Title (required)"
+                value={this.state.booksSearch}
+                name="search"
+                placeholder="Search Your book!"
               />
-              <Input
-                value={this.state.author}
-                onChange={this.handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                value={this.state.synopsis}
-                onChange={this.handleInputChange}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
-              />
-              <FormBtn
-                disabled={!(this.state.author && this.state.title)}
-                onClick={this.handleFormSubmit}
-              >
-                Submit Book
-              </FormBtn>
+              <Button
+                        onClick={this.handleFormSubmit}
+                        type="success"
+                        className="input-lg"
+                      >
+                        Search
+                      </Button>
             </form>
+            <BookList>
+                  {this.state.googleBooks.map(book => {
+                    return (
+                      <BookItem
+                        key={book.title}
+                        title={book.title}
+                        author={book.author}
+                        link={book.link}
+                        description={book.description}
+                        image={book.image}
+                      />
+                    );
+                  })}
+                </BookList>
           </Col>
           <Col size="md-6 sm-12">
             <Jumbotron>
